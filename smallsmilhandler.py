@@ -16,39 +16,41 @@ class SmallSMILHandler(ContentHandler):
         if name == 'root-layout':
             diccionario = {}
             diccionario['etiqueta'] = name
-            diccionario['width'] = attrs.get('width', "")
-            diccionario['heigth'] = attrs.get('height', "")
-            diccionario['bgcolor'] = attrs.get('background-color', "")
+            atributos = ['width', 'heigth', 'bgcolor']
+            for atributo in atributos:
+                diccionario[atributo] = attrs.get(atributo, "")
             self.Letiquetas.append(diccionario)
+
         elif name == 'region':
             diccionario = {}
             diccionario['etiqueta'] = name
-            diccionario['id'] = attrs.get('id', "")
-            diccionario['top'] = attrs.get('top', "")
-            diccionario['bottom'] = attrs.get('bottom', "")
-            diccionario['left'] = attrs.get('left', "")
-            diccionario['right'] = attrs.get('right', "")
+            atributos = ['id', 'top', 'bottom', 'left', 'right']
+            for atributo in atributos:
+                diccionario[atributo] = attrs.get(atributo, "")
             self.Letiquetas.append(diccionario)
+
         elif name == 'img':
             diccionario = {}
             diccionario['etiqueta'] = name
-            diccionario['src'] = attrs.get('src', "")
-            diccionario['begin'] = attrs.get('begin', "")
-            diccionario['dur'] = attrs.get('dur', "")
-            diccionario['region'] = attrs.get('region', "")
+            atributos = ['src', 'begin', 'dur', 'region']
+            for atributo in atributos:
+                diccionario[atributo] = attrs.get(atributo, "")
             self.Letiquetas.append(diccionario)
+
         elif name == 'audio':
             diccionario = {}
             diccionario['etiqueta'] = name
-            diccionario['src'] = attrs.get('src', "")
-            diccionario['begin'] = attrs.get('begin', "")
-            diccionario['dur'] = attrs.get('dur', "")
+            atributos = ['src', 'begin', 'dur']
+            for atributo in atributos:
+                diccionario[atributo] = attrs.get(atributo, "")
             self.Letiquetas.append(diccionario)
+
         elif name == 'textstream':
             diccionario = {}
             diccionario['etiqueta'] = name
-            diccionario['src'] = attrs.get('src', "")
-            diccionario['region'] = attrs.get('begin', "")
+            atributos = ['src', 'region']
+            for atributo in atributos:
+                diccionario[atributo] = attrs.get(atributo, "")
             self.Letiquetas.append(diccionario)
 
     def get_tags(self):
