@@ -10,46 +10,18 @@ class SmallSMILHandler(ContentHandler):
     def __init__(self):
 
         self.Letiquetas = []
+        self.Dlistatributos = {'root-layout': ['width', 'height', 'background-color'],
+                               'region': ['id', 'top', 'bottom', 'left', 'right'],
+                               'img': ['src', 'begin', 'dur', 'region'],
+                               'audio': ['src', 'begin', 'dur'],
+                               'textstream': ['src', 'region']}
 
     def startElement(self, name, attrs):
 
-        if name == 'root-layout':
+        if name in self.Dlistatributos:
             diccionario = {}
             diccionario['etiqueta'] = name
-            atributos = ['width', 'heigth', 'bgcolor']
-            for atributo in atributos:
-                diccionario[atributo] = attrs.get(atributo, "")
-            self.Letiquetas.append(diccionario)
-
-        elif name == 'region':
-            diccionario = {}
-            diccionario['etiqueta'] = name
-            atributos = ['id', 'top', 'bottom', 'left', 'right']
-            for atributo in atributos:
-                diccionario[atributo] = attrs.get(atributo, "")
-            self.Letiquetas.append(diccionario)
-
-        elif name == 'img':
-            diccionario = {}
-            diccionario['etiqueta'] = name
-            atributos = ['src', 'begin', 'dur', 'region']
-            for atributo in atributos:
-                diccionario[atributo] = attrs.get(atributo, "")
-            self.Letiquetas.append(diccionario)
-
-        elif name == 'audio':
-            diccionario = {}
-            diccionario['etiqueta'] = name
-            atributos = ['src', 'begin', 'dur']
-            for atributo in atributos:
-                diccionario[atributo] = attrs.get(atributo, "")
-            self.Letiquetas.append(diccionario)
-
-        elif name == 'textstream':
-            diccionario = {}
-            diccionario['etiqueta'] = name
-            atributos = ['src', 'region']
-            for atributo in atributos:
+            for atributo in self.Dlistatributos[name]:
                 diccionario[atributo] = attrs.get(atributo, "")
             self.Letiquetas.append(diccionario)
 
