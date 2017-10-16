@@ -6,6 +6,8 @@ from xml.sax.handler import ContentHandler
 import sys
 import smallsmilhandler
 import json
+import urllib.request
+
 
 class Karaoke(smallsmilhandler.SmallSMILHandler):
 
@@ -26,10 +28,9 @@ class Karaoke(smallsmilhandler.SmallSMILHandler):
             var = etiqueta
 
             while n <= leng-1:
-                var += ('{tabulador}{clave}="{valor}"'.format(clave = listauxiliar[n],
-                        valor = listauxiliar[n+1], tabulador = '\t'))
+                var += ('{tabulador}{clave}="{valor}"'.format(clave=listauxiliar[n],
+                        valor=listauxiliar[n+1], tabulador='\t'))
                 n = n+2
-
             print(var)
             listauxiliar = []
 
@@ -37,6 +38,13 @@ class Karaoke(smallsmilhandler.SmallSMILHandler):
         with open('karaoke.json', 'w') as outfile:
             json.dump(self.Letiquetas, outfile)
 
+    def urls(self):
+        for diccionario in self.Letiquetas:
+            for clave, valor in diccionario.items():
+                if clave == 'src' and valor[:valor.find(':')] == 'http':
+                        with urllib.request.urlopen(valor) as response:
+                            nombre = valor[valor.rfind('/')+1:]
+                            local_filename, headers = urllib.request.urlretrieve(valor, filename=nombre)
 
 if __name__ == "__main__":
     try:
@@ -53,3 +61,4 @@ if __name__ == "__main__":
         sys.exit("File not found // Usage: python3 karaoke.py file.smil")
     print(cHandler.get_tags())
     cHandler.fichjson()
+    cHandler.urls()
