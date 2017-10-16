@@ -5,18 +5,9 @@ from xml.sax import make_parser
 from xml.sax.handler import ContentHandler
 import sys
 import smallsmilhandler
-
+import json
 
 class Karaoke(smallsmilhandler.SmallSMILHandler):
-
-    def __init__(self):
-
-        self.Letiquetas = []
-        self.Dlistatributos = {'root-layout': ['width', 'height', 'background-color'],
-                               'region': ['id', 'top', 'bottom', 'left', 'right'],
-                               'img': ['src', 'begin', 'dur', 'region'],
-                               'audio': ['src', 'begin', 'dur'],
-                               'textstream': ['src', 'region']}
 
     def get_tags(self):
         listauxiliar = []
@@ -42,6 +33,10 @@ class Karaoke(smallsmilhandler.SmallSMILHandler):
             print(var)
             listauxiliar = []
 
+    def fichjson(self):
+        with open('karaoke.json', 'w') as outfile:
+            json.dump(self.Letiquetas, outfile)
+
 
 if __name__ == "__main__":
     try:
@@ -57,3 +52,4 @@ if __name__ == "__main__":
     except FileNotFoundError:
         sys.exit("File not found // Usage: python3 karaoke.py file.smil")
     print(cHandler.get_tags())
+    cHandler.fichjson()
