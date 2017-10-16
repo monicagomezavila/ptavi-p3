@@ -9,11 +9,18 @@ import json
 import urllib.request
 
 
-class Karaoke(smallsmilhandler.SmallSMILHandler):
+class KaraokeLocal():
 
-    def get_tags(self):
+    def __init__(self):
+        parser = make_parser()
+        cHandler = smallsmilhandler.SmallSMILHandler()
+        parser.setContentHandler(cHandler)
+        parser.parse(open(sys.argv[1]))
+        self.Letiquetas = cHandler.get_tags()
+
+    def __str__(self):
         listauxiliar = []
-
+        z = ''
         for diccionario in self.Letiquetas:
             etiqueta = diccionario.get('etiqueta', [])
             diccionario.pop('etiqueta', etiqueta)
@@ -31,14 +38,18 @@ class Karaoke(smallsmilhandler.SmallSMILHandler):
                 var += ('{tabulador}{clave}="{valor}"'.format(clave=listauxiliar[n],
                         valor=listauxiliar[n+1], tabulador='\t'))
                 n = n+2
-            print(var)
-            listauxiliar = []
 
-    def fichjson(self):
-        with open('karaoke.json', 'w') as outfile:
+            z += ('{variable}{salto}'.format(variable=var, salto='\n'))
+            listauxiliar = []
+        return(z)
+
+    def to_json(self):
+        fichjson = sys.argv[1][:sys.argv[1].find('.')]
+        fichjson = fichjson+'.json'
+        with open(fichjson, 'w') as outfile:
             json.dump(self.Letiquetas, outfile)
 
-    def urls(self):
+    def do_local(self):
         for diccionario in self.Letiquetas:
             for clave, valor in diccionario.items():
                 if clave == 'src' and valor[:valor.find(':')] == 'http':
@@ -48,17 +59,9 @@ class Karaoke(smallsmilhandler.SmallSMILHandler):
 
 if __name__ == "__main__":
     try:
-        nombresmil = str(sys.argv[1])
+        classkaraoke = KaraokeLocal()
     except IndexError:
         sys.exit("Usage: python3 karaoke.py file.smil")
-
-    parser = make_parser()
-    cHandler = Karaoke()
-    parser.setContentHandler(cHandler)
-    try:
-        parser.parse(open(nombresmil))
-    except FileNotFoundError:
-        sys.exit("File not found // Usage: python3 karaoke.py file.smil")
-    print(cHandler.get_tags())
-    cHandler.fichjson()
-    cHandler.urls()
+    print(classkaraoke.__str__())
+    classkaraoke.to_json()
+    classkaraoke.do_local()
