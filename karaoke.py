@@ -23,10 +23,10 @@ class KaraokeLocal():
         z = ''
         for diccionario in self.Letiquetas:
             etiqueta = diccionario.get('etiqueta', [])
-            diccionario.pop('etiqueta', etiqueta)
+
 
             for clave, valor in diccionario.items():
-                if valor != "":
+                if valor != "" and clave != etiqueta:
                     listauxiliar.append(clave)
                     listauxiliar.append(valor)
 
@@ -43,9 +43,10 @@ class KaraokeLocal():
             listauxiliar = []
         return(z)
 
-    def to_json(self):
-        fichjson = sys.argv[1][:sys.argv[1].find('.')]
-        fichjson = fichjson+'.json'
+    def do_json(self, fichjson = ''):
+        if fichjson == '':
+            fichjson = sys.argv[1][:sys.argv[1].find('.')]
+            fichjson = fichjson + '.json'
         with open(fichjson, 'w') as outfile:
             json.dump(self.Letiquetas, outfile)
 
@@ -57,11 +58,14 @@ class KaraokeLocal():
                             nombre = valor[valor.rfind('/')+1:]
                             local_filename, headers = urllib.request.urlretrieve(valor, filename=nombre)
 
+                            diccionario['src'] = nombre
 if __name__ == "__main__":
     try:
         classkaraoke = KaraokeLocal()
     except IndexError:
         sys.exit("Usage: python3 karaoke.py file.smil")
-    print(classkaraoke.__str__())
-    classkaraoke.to_json()
+    print(classkaraoke)
+    classkaraoke.do_json()
     classkaraoke.do_local()
+    classkaraoke.do_json('local.json')
+    print(classkaraoke)
